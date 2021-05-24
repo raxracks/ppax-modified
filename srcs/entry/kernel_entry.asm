@@ -1,3 +1,4 @@
+[bytes 64]
 .set MAGIC, 0x1badb002
 .set FLAGS, 7
 .set CHECKSUM, -(MAGIC + FLAGS)

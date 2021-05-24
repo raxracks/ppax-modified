@@ -1,9 +1,8 @@
 extern "C" {
-	#include <stdio/stdio.h>
-	#include <utils/types.h>
-	#include <input/keyboard.h>
+#include <stdio/stdio.h>
+#include <utils/types.h>
+#include <input/keyboard.h>
 }
-
 #include <graphics/vga.h>
 
 VideoGraphicsArray *vgap;
@@ -12,37 +11,10 @@ VideoGraphicsArray *vgap;
 #define height 768 // hard coded - not good please change
 
 uint32_t buffer[width * height]; // hard coded - not good please change
-static const char* hex = "0123456789ABCDEF";
 
-void printfHex(uint8_t key, int32_t x, int32_t y, uint32_t color) {
-	char* foo = "00";
+void window(int32_t x, int32_t y, uint32_t w, uint32_t h) { // create a window
 
-	foo[0] = hex[(key >> 4) & 0xF];
-	foo[1] = hex[key & 0xF];
-	vgap->PutStr(foo, x, y, color);
-}
-
-void printfHex32(uint32_t key, int32_t x, int32_t y, uint32_t color) {
-	printfHex((key >> 24) & 0xFF, x, y, color);
-	printfHex((key >> 16) & 0xFF, x+16, y, color);
-	printfHex((key >> 8) & 0xFF, x+32, y, color);
-	printfHex( key & 0xFF, x+48, y, color);
-}
-
-void printf(char* str, uint32_t key, int32_t x, int32_t y, uint32_t color) {
-	vgap->PutStr(str, x, y, color);
-
-	int l = 0;
-	for (; str[l] != 0; l++);
-	printfHex32(key, x + (l*8), y, color);
-}
-
-/**
- * Draw something that looks like a window
- */
-void window(int32_t x, int32_t y, uint32_t w, uint32_t h) {
-
-	vgap->FillRectangle(x, y, w, h, 0x909090); // full
+	vgap->FillRectangle(x, y, w, h, 0x909090); // border
 	vgap->FillRectangle(x+2, y+2, w-4, 2, 0x2040E0); // top bar
 	vgap->FillRectangle(x+2, y+4, w-4, 8, 0x1030A0); // top bar
 	vgap->FillRectangle(x+2, y+12, w-4, 2, 0x002080); // top bar
@@ -61,6 +33,46 @@ void window(int32_t x, int32_t y, uint32_t w, uint32_t h) {
 	vgap->PutStr("i totally wrote all the code for this", x + 4, y + 20, 0x000000);
 }
 
+char* itoa(int value, int base = 10) // matei
+{
+    char* str = "";
+
+    char * rc;
+    char * ptr;
+    char * low;
+    // Check for supported base.
+    if ( base < 2 || base > 36 )
+    {
+        *str = '\0';
+        return str;
+    }
+    rc = ptr = str;
+    // Set '-' for negative decimals.
+    if ( value < 0 && base == 10 )
+    {
+        *ptr++ = '-';
+    }
+    // Remember where the numbers start.
+    low = ptr;
+    // The actual conversion.
+    do
+    {
+        // Modulo is negative for negative value. This trick makes abs() unnecessary.
+        *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
+        value /= base;
+    } while ( value );
+    // Terminating the string.
+    *ptr-- = '\0';
+    // Invert the numbers.
+    while ( low < ptr )
+    {
+        char tmp = *low;
+        *low++ = *ptr;
+        *ptr-- = tmp;
+    }
+    return rc;
+}
+
 char* memset(char* s, int c,  int len)
 {
     char* p=s;
@@ -71,33 +83,13 @@ char* memset(char* s, int c,  int len)
     return s;
 }
 
+void HandleMessage(char* message) {
+	if(strcmp(message, "createwindow") == 1) {
+		window(100, 10, 700, 600);
+	}
+}
+
 extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multiboot_structure, uint32_t /*multiboot_magic*/) {
-	/*changeBColor(0x0);
-	changeFColor(0x4);
-
-	clear_screen();
-
-	while (true) {
-		kprintln("> ");
-		char* string;
-		getline(string, 80);
-		if(strcmp(string, "clear") == 1) {
-			clear_screen();
-		} else if(strcmp(string, "sus") == 1) {
-			kprintln("      /----------\\");
-			kprintln("      |          |");
-			kprintln("      |      /------\\");
-			kprintln("   /--|      |      |");
-			kprintln("   |  |      \\------/");
-			kprintln("   |  |          |             you are hella sus my guy.");
-			kprintln("   |  |          |");
-			kprintln("   \\--|    __    |");
-			kprintln("      |    ||    |");
-			kprintln("      |    ||    |");
-			kprintln("      |____||____|");
-		}
-	}*/
-
 	VideoGraphicsArray vga(multiboot_structure, buffer);
 
 	vgap = &vga;
@@ -107,15 +99,15 @@ extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multib
 	int i = 0;
 
 	while(true) {
-		char string[1000];
+		char string[1000]; // define command array
 
-		vgap->PutStr(">", 0, y, 0xFFFFFF);
+		vgap->PutStr("~$", 0, y, 0xFFFFFF); // draw line starter
 
-		char character = nonblocking_getchar();
+		char character = nonblocking_getchar(); // get character
 
-		vgap->FillRectangle(x, y + 8, 10, 2, 0xFFFFFF);
+		//vgap->FillRectangle(x, y + 8, 10, 2, 0xFFFFFF); // cursor
 
-		vgap->FillRectangle(x - 10, y + 8, 10, 2, 0x0);
+		//vgap->FillRectangle(x - 10, y + 8, 10, 2, 0x0); // remove previous cursor
 
 		if(character != 0) {
 			if(character == 0x08) {
@@ -126,26 +118,23 @@ extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multib
 				vgap->FillRectangle(x, y, 10, 10, 0x0000000);
 				vgap->FillRectangle(x + 10, y, 10, 10, 0x0000000);
 			} else if(character == 0x0D) {
-				vgap->FillRectangle(x, y, 10, 10, 0x0000000);
+				i = 0;
 				x = 20;
 				y += 10;
-				string[1000] = {0};
-					vgap->PutStr(string, 0, y + 10, 0xFFFFFF);
+
+				HandleMessage(string);
+
+				string[1000] = { 0 };
 			} else {
 				string[i] = character;
 				vgap->PutStr(&character, x, y, 0xFFFFFF);
-				x += 20;
+				x += 10;
 				if(x > 1024) {
 					x = 20;
 					y += 10;
 				}
-				i++;
-				
-				if(i > 4) {
-					memset(string, 0, sizeof string);
 
-					vgap->PutStr(string, 0, y + 10, 0xFFFFFF);
-				}
+				i++;
 			}
 		}
 
