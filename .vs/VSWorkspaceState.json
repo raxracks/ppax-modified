@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\includes",
+    "\\includes\\stdio",
+    "\\includes\\utils",
+    "\\srcs",
+    "\\srcs\\entry",
+    "\\srcs\\stdio",
+    "\\srcs\\utils"
+  ],
+  "SelectedNode": "\\includes\\kernio",
+  "PreviewInSolutionExplorer": false
+}
