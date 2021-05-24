@@ -1,6 +1,4 @@
-@echo off
-
-C:\Users\nicol\AppData\Local\bin\NASM\nasm.exe -f elf32 srcs\entry\gdt.asm -o outputs\gdt.o
+nasm.exe -f elf32 srcs\entry\gdt.asm -o outputs\gdt.o
 wsl as --32 srcs/entry/kernel_entry.asm -o outputs/kernel_entry.o
 
 :: compile C/C++ resources

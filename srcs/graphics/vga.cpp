@@ -79,7 +79,7 @@ void VideoGraphicsArray::FillRectangle(int32_t x, int32_t y, uint32_t w, uint32_
 /**
  * Copy the screen buffer to the screen
  */
-void VideoGraphicsArray::bufferToScreen() {
+void VideoGraphicsArray::SwapBuffers() {
     
     // do the multiply once and test against 0
     for(int i = width * height; i >= 0; i--) {

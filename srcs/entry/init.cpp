@@ -73,16 +73,6 @@ char* itoa(int value, int base = 10) // matei
     return rc;
 }
 
-char* memset(char* s, int c,  int len)
-{
-    char* p=s;
-    while(len--)
-    {
-        *p++ = (char)c;
-    }
-    return s;
-}
-
 void HandleMessage(char* message) {
 	if(strcmp(message, "createwindow") == 1) {
 		window(100, 10, 700, 600);
@@ -101,7 +91,7 @@ extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multib
 	while(true) {
 		char string[1000]; // define command array
 
-		vgap->PutStr("~$", 0, y, 0xFFFFFF); // draw line starter
+		vgap->PutStr(">", 0, y, 0xFFFFFF); // draw line starter
 
 		char character = nonblocking_getchar(); // get character
 
@@ -109,7 +99,7 @@ extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multib
 
 		//vgap->FillRectangle(x - 10, y + 8, 10, 2, 0x0); // remove previous cursor
 
-		if(character != 0) {
+		if(character != 0) { // many hardcoded values below, very bad and ugly
 			if(character == 0x08) {
 				x -= 10;
 
@@ -138,6 +128,6 @@ extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multib
 			}
 		}
 
-		vga.bufferToScreen();
+		vga.SwapBuffers();
 	}
 }
