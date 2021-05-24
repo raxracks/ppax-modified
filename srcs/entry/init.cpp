@@ -12,6 +12,50 @@ VideoGraphicsArray *vgap;
 
 uint32_t buffer[width * height]; // hard coded - not good please change
 
+int sqrt(int x) {
+  // let initial guess to be 1
+  int z = 1.0;
+  for(int i = 1; i <= 10; i++) {
+    z -= (z*z - x) / (2*z); // MAGIC LINE!!
+  }
+  return z;
+}
+
+void circleSimple(int xCenter, int yCenter, int radius, uint32_t c)
+    {
+        int pix = c;
+        int x, y, r2;
+        
+        r2 = radius * radius;
+        for (x = -radius; x <= radius; x++) {
+            y = (int)(sqrt(r2 - x*x) + 0.5);
+            vgap->PutPixel(xCenter + x, yCenter + y, pix);
+            vgap->PutPixel(xCenter + x, yCenter - y, pix);
+        }
+    }
+
+void RoundWindow(int32_t x, int32_t y, uint32_t w, uint32_t h) { // create a window
+	
+
+	/*vgap->FillRectangle(x, y, w, h, 0x909090); // border
+	vgap->FillRectangle(x+2, y+2, w-4, 2, 0x2040E0); // top bar
+	vgap->FillRectangle(x+2, y+4, w-4, 8, 0x1030A0); // top bar
+	vgap->FillRectangle(x+2, y+12, w-4, 2, 0x002080); // top bar
+	vgap->FillRectangle(x+2, y+14, w-4, h-28, 0xE0E0E0); // content
+	vgap->FillRectangle(x+2, y+h-12, w-4, 10, 0xC0C0C0); // bottom bar
+	vgap->FillRectangle(x+w-37, y+3, 10, 10, 0xD0D0D0); // button back
+	vgap->FillRectangle(x+w-25, y+3, 10, 10, 0xD0D0D0); // button back
+	vgap->FillRectangle(x+w-13, y+3, 10, 10, 0xD0D0D0); // button back
+	vgap->PutStr("chados", x + 4, y + 5, 0xFFFFFF);
+
+	vgap->PutChar('_', x+w-36, y+4, 0x101010);
+	vgap->FillRectangle(x+w-24, y+4, 8, 8, 0x101010);
+	vgap->FillRectangle(x+w-23, y+5, 6, 6, 0xD0D0D0);
+	vgap->PutChar('X', x+w-12, y+4, 0x101010);
+
+	vgap->PutStr("i totally wrote all the code for this", x + 4, y + 20, 0x000000);*/
+}
+
 void window(int32_t x, int32_t y, uint32_t w, uint32_t h) { // create a window
 
 	vgap->FillRectangle(x, y, w, h, 0x909090); // border
@@ -74,9 +118,7 @@ char* itoa(int value, int base = 10) // matei
 }
 
 void HandleMessage(char* message) {
-	if(strcmp(message, "createwindow") == 1) {
-		window(100, 10, 700, 600);
-	}
+	
 }
 
 extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multiboot_structure, uint32_t /*multiboot_magic*/) {
@@ -89,6 +131,8 @@ extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multib
 	int i = 0;
 
 	while(true) {
+		vgap->Clear();
+
 		char string[1000]; // define command array
 
 		vgap->PutStr(">", 0, y, 0xFFFFFF); // draw line starter
@@ -126,7 +170,11 @@ extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multib
 
 				i++;
 			}
+
+			
 		}
+
+		circleSimple(x, 300, 50, 0xE0E0E0);
 
 		vga.SwapBuffers();
 	}
