@@ -35,7 +35,7 @@ void window(int32_t x, int32_t y, uint32_t w, uint32_t h) { // create a window
 	vgap->PutStr("circle", x + 4, y + 30, 0x000000);
 }
 
-char* itoa(int value, int base = 10) // matei
+char* itoa(int value, int base = 10) // thanks matei for this code
 {
     char* str = "";
 
@@ -82,7 +82,7 @@ int x = 20;
 	int windowX = 0;
 	int windowY = 0;
 
-	void HandleMessage(char* message) {
+	void HandleMessage(char* message) { // some stupid window movement commands
 		if(strcmp(message, "createwindow") == 1) {
 			window(windowX, windowY, 500, 500);
 		} else if(strcmp(message, "right") == 1) {
@@ -102,11 +102,11 @@ int x = 20;
 	}
 
 extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multiboot_structure, uint32_t /*multiboot_magic*/) {
+	
+	
 	VideoGraphicsArray vga(multiboot_structure, buffer);
 
 	vgap = &vga;
-
-	
 
 	while(true) {
 		//vgap->Clear();
@@ -153,8 +153,6 @@ extern "C" void kernelMain(uint32_t stackPointer, const multiboot_header* multib
 
 			
 		}
-
-		//circleSimple(x, 300, 50, 0xE0E0E0);
 
 		vga.SwapBuffers();
 	}
