@@ -2,3 +2,4 @@
 void getline(char* string, int len);
 char getchar();
 char nonblocking_getchar();
+int isShiftDown();

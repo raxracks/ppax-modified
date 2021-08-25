@@ -87,9 +87,9 @@ void VideoGraphicsArray::SwapBuffers() {
     }
 }
 
-void VideoGraphicsArray::Clear() {
+void VideoGraphicsArray::Clear(uint32_t color) {
     for(int i = width * height; i >= 0; i--) {
-        buffer[i] = 0;
+        buffer[i] = color;
     }
 }
 

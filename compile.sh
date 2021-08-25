@@ -5,12 +5,12 @@ rm -rf outputs/tmp/boot/grub
 as --32 srcs/entry/kernel_entry.asm -o outputs/kernel_entry.o
 
 #compile C/C++ resources
-gcc -w -ffreestanding -m32 -c srcs/stdio/stdio.c -o outputs/stdio.o -Iincludes/
-gcc -w -ffreestanding -m32 -c srcs/utils/ports.c -o outputs/ports.o -Iincludes/
-gcc -w -ffreestanding -m32 -c srcs/utils/util.c -o outputs/util.o -Iincludes/
-gcc -w -ffreestanding -m32 -c srcs/input/keyboard.c -o outputs/keyboard.o -Iincludes/
-gcc -w -ffreestanding -m32 -c srcs/graphics/vga.cpp -o outputs/vga.o -Iincludes/
-gcc -w -ffreestanding -m32 -c srcs/entry/init.cpp -o outputs/init.o -Iincludes/ -I. -fno-threadsafe-statics -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings -fno-pie
+gcc -w -ffreestanding -fno-stack-protector -m32 -c srcs/stdio/stdio.c -o outputs/stdio.o -Iincludes/
+gcc -w -ffreestanding -fno-stack-protector -m32 -c srcs/utils/ports.c -o outputs/ports.o -Iincludes/
+gcc -w -ffreestanding -fno-stack-protector -m32 -c srcs/utils/util.c -o outputs/util.o -Iincludes/
+gcc -w -ffreestanding -fno-stack-protector -m32 -c srcs/input/keyboard.c -o outputs/keyboard.o -Iincludes/
+gcc -w -ffreestanding -fno-stack-protector -m32 -c srcs/graphics/vga.cpp -o outputs/vga.o -Iincludes/
+gcc -w -ffreestanding -fno-stack-protector -m32 -c srcs/entry/init.cpp -o outputs/init.o -Iincludes/ -I. -fno-threadsafe-statics -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings -fno-pie
 
 ld -melf_i386 -T srcs/linker.ld outputs/* -o outputs/temp.elf
 

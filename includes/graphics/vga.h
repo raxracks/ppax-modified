@@ -304,7 +304,7 @@ uint64_t FONT[256] = {
             void PutStr(char* ch, int32_t x, int32_t y, uint32_t colorIndex);
             void FillRectangle(int32_t x, int32_t y, uint32_t w, uint32_t h, uint32_t color);
             void SwapBuffers();
-            void Clear();
+            void Clear(uint32_t color);
         };
         
 #endif

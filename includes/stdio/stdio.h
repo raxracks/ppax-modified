@@ -24,3 +24,4 @@ int is_ascii(int c);
 int strcmp(char* string1, char* string2);
 int get_char_size(char* s);
 int getCurrentRow();
+char* itoa(int value, int base);

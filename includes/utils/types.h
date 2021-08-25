@@ -11,6 +11,9 @@
 #ifndef _C_TYPES_H
 #define _C_TYPES_H
 
+#define true 1
+#define false 0
+
 typedef char                     int8_t;
 typedef unsigned char           uint8_t;
 typedef short                   int16_t;
@@ -21,5 +24,4 @@ typedef long long int           int64_t;
 typedef unsigned long long int uint64_t;
 typedef long				     size_t;
 typedef unsigned long uintptr_t;
-
 #endif //_C_TYPES_H

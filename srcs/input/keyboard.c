@@ -7,6 +7,8 @@
  * Private kernel functions                               *
  **********************************************************/
 
+int shiftDown = 0;
+
 uint8_t kybrd_ctrl_read_status(){
 	return port_byte_inb(KYBRD_CTRL_STATS_REG);
 }
@@ -38,6 +40,9 @@ void kybrd_enc_send_cmd (uint8_t cmd) {
  * Public Kernel API functions                            *
  **********************************************************/
 
+int isShiftDown() {
+	return shiftDown;
+}
 
 void getline(char* string, int len){
 	uint8_t i=0;
@@ -90,9 +95,22 @@ char nonblocking_getchar() {
 	uint8_t key = 0;
 		if (kybrd_ctrl_read_status () & KYBRD_CTRL_STATS_MASK_OUT_BUF) {
 			code = kybrd_enc_read_buf ();
+
+			if(code == 0x2A) {
+				shiftDown = 1; // shift down
+				return 0;
+			}
+
+			if(code == 0xAA) {
+				shiftDown = 0; // shift up
+				return 0;
+			}
+
 			if(code <= 0x58){
 				key = _kkybrd_scancode_std [code];
 			}
+
+			//key = code;
 		}
 	return key;
 }
