@@ -68,7 +68,7 @@
         +-------------------+
  * 
  */
-struct multiboot_header {
+typedef struct __attribute__((section(".multiboot"))) multiboot_hdr {
     uint32_t flags;
     uint32_t mem_lower;
     uint32_t mem_upper;
@@ -100,6 +100,6 @@ struct multiboot_header {
     uint8_t framebuffer_bpp;
     uint8_t framebuffer_type;
     uint8_t color_info[5];
-} __attribute__((section(".multiboot")));
+} multiboot_header;
 
 #endif
