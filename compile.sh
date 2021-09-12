@@ -24,4 +24,4 @@ cp srcs/grub.cfg outputs/tmp/boot/grub/grub.cfg
 
 grub-mkrescue --output=result/bootable.iso outputs/tmp
 rm -rf outputs/*
-qemu-system-x86_64 -cdrom result/bootable.iso -m 1G
+qemu-system-x86_64 -cdrom result/bootable.iso -m 1G -nographic
